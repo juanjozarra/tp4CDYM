@@ -11,8 +11,7 @@
 volatile unsigned short sensor; /* numero positivo de 16 bits (rango de 0 a 65535)
 que indica el valor leido por el sensor */
 
-volatile unsigned short temp = 0; /* numero positivo de 16 bits
-(rango de 0 a 65535) que indica el valor de la temperatura multiplicado por 10 */
+volatile float tempfloat = 0; /* numero de 32 bits que indica el valor de la temperatura con decimales */
 
 
 void ADC_init()
@@ -46,14 +45,15 @@ int ADC_GetData()
 
 void ADC_Update(){
 	sensor = ADC_GetData(); //Leo el valor del registro de ADC0
-	temp = (sensor * 5000UL / 1024UL); //Valor de voltaje medido se obtiene mediante la ecucacion Vmedido = (sensor * 5000mV) / 2^10
-	if (temp > 240)
+	tempfloat = (sensor * 5000.0f / 1024.0f) / 10.0f; //Valor de voltaje medido en mV se obtiene mediante la ecucacion Vmedido = (sensor * 5000mV) / 2^10.
+												//Al dividir dicho voltaje en por 10 obtenemos la temperatura.
+	if (tempfloat > 24)
 	{
 		PORTB = (0b00000001);
 	}
 	else
 	{
-		if (temp < 170)
+		if (tempfloat < 17)
 		{
 			PORTB = (0b00000010);			
 		}

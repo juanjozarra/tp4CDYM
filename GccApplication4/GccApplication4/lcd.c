@@ -6,7 +6,7 @@
 #include <util/delay.h>
 
 
-extern volatile unsigned int temp;
+extern volatile float tempfloat;
 
 const uint8_t LcdCustomChar[] PROGMEM=//define 8 custom LCD chars
 {
@@ -387,9 +387,9 @@ void LCD_Init() {
 void LCD_Update(){
 	char Temp_string[] = "Temp: 00.0 C"; //Preparo la cadena de string a mostrar en el LCD
 	char CHARMAP[10]={'0','1','2','3','4','5','6','7','8','9'};
-	Temp_string[6] = CHARMAP[temp/100] ; // Obtengo la decena correspondiente al valor de temperatura
-	Temp_string[7] = CHARMAP[(temp/10)%10]; // Obtengo la unidad correspondiente al valor de temperatura
-	Temp_string[9] = CHARMAP[temp%10]; // Obtengo el primer decimal correspondiente al valor de temperatura
+	Temp_string[6] = CHARMAP[(int)tempfloat/10]; // Obtengo la decena correspondiente al valor de temperatura
+	Temp_string[7] = CHARMAP[(int)tempfloat%10]; // Obtengo la unidad correspondiente al valor de temperatura
+	Temp_string[9] = CHARMAP[(int)(tempfloat*10)%10]; // Obtengo el primer decimal correspondiente al valor de temperatura
 	LCDstring(Temp_string, 12); //Muestro el mensaje en el LCD con la temperatura indicada 
 	LCDhome();
 }

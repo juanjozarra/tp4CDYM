@@ -5,6 +5,8 @@
  * Author : Juanjo
  */ 
 
+#define F_CPU 16000000UL
+#include <util/delay.h>
 #include <avr/io.h>
 #include "ADC.h"
 #include "SEOS.h"
