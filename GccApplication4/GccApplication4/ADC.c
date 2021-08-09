@@ -8,18 +8,18 @@
 #include "ADC.h"
 
 
-volatile unsigned short sensor; /* numero positivo de 8 bits (rango de 0 a 255)
+volatile unsigned short sensor; /* numero positivo de 16 bits (rango de 0 a 65535)
 que indica el valor leido por el sensor */
 
-volatile unsigned short temp = 0; /* numero positivo de 32 bits
-(rango de 0 a 4294967295) que indica el valor de la temperatura multiplicado por 10 */
+volatile unsigned short temp = 0; /* numero positivo de 16 bits
+(rango de 0 a 65535) que indica el valor de la temperatura multiplicado por 10 */
 
 
 void ADC_init()
 {
-	ADMUX= 0b01000000;
+	ADMUX= 0b00000000; // Vref=AVCC, bit justificados a derecho, ADC0/PC0 pin de lectura
 
-	// Divisor de frecuencia = 128 -> 16000/128 = 125 KHz 
+	// Divisor de frecuencia = 128 -> 16000KHz/128 = 125 KHz 
 	ADCSRA |= (1<<ADPS0);
 	ADCSRA |= (1<<ADPS1);
 	ADCSRA |= (1<<ADPS2);
@@ -41,12 +41,12 @@ int ADC_GetData()
 	// Apagamos el ADC
 	ADCSRA &=~ (1<<ADEN);
 
-	return ADC;
+	return ADC; //Retornamos el valor del registro ADC 
 }
 
 void ADC_Update(){
-	sensor = ADC_GetData();
-	temp = (sensor * 5000UL / 1023UL);
+	sensor = ADC_GetData(); //Leo el valor del registro de ADC0
+	temp = (sensor * 5000UL / 1024UL); //Valor de voltaje medido se obtiene mediante la ecucacion Vmedido = (sensor * 5000mV) / 2^10
 	if (temp > 240)
 	{
 		PORTB = (0b00000001);
@@ -63,3 +63,4 @@ void ADC_Update(){
 		}
 	}		
 }
+

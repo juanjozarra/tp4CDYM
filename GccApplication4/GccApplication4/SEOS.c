@@ -10,7 +10,7 @@
 #include "lcd.h"
 #include <avr/interrupt.h>
 
-static unsigned char ADC_Flag=1;
+static unsigned char ADC_Flag=5;
 static unsigned char LCD_Flag=0;
 
 void SEOSSChedulerTasks();
@@ -44,7 +44,7 @@ ISR(TIMER0_COMPA_vect){
 void SEOSSChedulerTasks(){
 	static char adcCont=0, lcdCount=0;
 	
-	if(++adcCont==50)
+	if(++adcCont==10)
 	{
 		ADC_Flag = 1;
 		adcCont=0;
